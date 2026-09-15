@@ -1,0 +1,6 @@
+Epochs: 20, batch size: 32
+Training accuracy:      0.9513
+Validation accuracy:    0.9844
+Test accuracy:          0.9514
+Test precision (macro): 0.9287
+Test recall (macro):    0.9280

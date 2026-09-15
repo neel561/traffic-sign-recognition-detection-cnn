@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conclusion</title>
+    <style>
+        .background-image2 {
+            background-image: url('/yena-kwon-63tI5gyLHRc-unsplash\ \(1\).jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+        }
+
+        .header1 {
+            padding: 40px;
+            text-align: center;
+            color: red;
+            font-size: 30px;
+        }
+
+        p {
+            font-size: 20px;
+            color: floralwhite;
+        }
+
+        .references {
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-image2">
+        <div class="header1">
+            <h1><i>Conclusion & Future work</i></h1>
+            <p>&nbsp;&nbsp;We built a traffic sign recognition system based on a convolutional neural network
+                trained on the GTSRB dataset. The model sorts an image into one of 43 sign types and correctly
+                recognises 95.1% of the 12,630 test images, with an average precision of 92.9% and recall of 92.8%
+                across the classes. It trains in minutes on an ordinary CPU, which shows that a small CNN is enough to
+                recognise cropped traffic sign images accurately.</p>
+            <p>&nbsp;&nbsp;The system has clear limits. It recognises signs but does not find them: it works best when
+                the picture shows a single sign filling most of the frame, as in the dataset, and it cannot locate
+                signs in a wider street scene. When the model is unsure it reports that no sign was recognised, but it
+                can still be confidently wrong on photos with no sign in them. Most mistakes are between signs that
+                look alike at 30x30 pixels, such as the 60 and 80 km/h speed limits, and accuracy is lower for rarer
+                classes such as Pedestrians and for rotated or blurred images.</p>
+            <p>&nbsp;&nbsp;Future work: add a detection stage (for example YOLO or Faster R-CNN) that finds signs in
+                full camera frames before classifying them; train with data augmentation (small rotations, brightness
+                and blur changes) and class balancing to make the model more robust and improve the weaker classes;
+                and extend the system to video from a vehicle-mounted camera for real-time recognition.</p>
+            <p class="references">References: J. Stallkamp, M. Schlipsing, J. Salmen and C. Igel, "The German Traffic
+                Sign Recognition Benchmark: A multi-class classification competition", IJCNN 2011.
+                D. Tabernik and D. Skočaj, "Deep Learning for Large-Scale Traffic-Sign Detection and Recognition",
+                IEEE Transactions on Intelligent Transportation Systems 21(4), 2020 (background reading for the
+                project report).</p>
+        </div>
+    </div>
+</body>
+
+</html>

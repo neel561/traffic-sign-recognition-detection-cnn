@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstract</title>
+    <style>
+        .background-image1 {
+            background-image: url('/pexels-martin-dusek-566862.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 50px;
+            text-align: center;
+
+            color: red;
+            font-size: 30px;
+        }
+        p{
+            font-size: 20px;
+            color: floralwhite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-image1">
+        <div class="header">
+            <h1><i>Abstract</i></h1>
+            <p>Traffic signs tell drivers about speed limits, hazards and the rules of the road, and recognising
+                them automatically is an important part of driver-assistance and self-driving systems. This project
+                builds a deep learning system that recognises traffic signs in images.</p>
+            <p>We trained a convolutional neural network (CNN) on the German Traffic Sign Recognition Benchmark
+                (GTSRB), which has more than 50,000 real-world photos of 43 kinds of traffic sign taken in different
+                lighting, weather, distances and angles. Each image is resized to 30x30 pixels and passed through
+                four convolutional layers, two max-pooling layers, dropout and two fully connected layers, ending
+                in a softmax output over the 43 sign classes.</p>
+            <p>The trained model correctly recognises 95.1% of the 12,630 images in the separate GTSRB test set. It
+                can be tried through this website and through a desktop application: upload a picture of a traffic
+                sign, and the system names the sign and shows how confident it is.</p>
+        </div>
+    </div>
+
+</body>
+
+</html>
