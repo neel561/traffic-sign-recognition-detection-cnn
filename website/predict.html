@@ -114,6 +114,7 @@
             </label>
             <img id="preview" alt="Selected traffic sign" hidden>
             <button type="submit" class="btn-warning" id="predict" disabled>Predict</button>
+            <button type="button" class="btn-warning" id="detect" disabled>Find signs in photo</button>
         </form>
         <p id="result" aria-live="polite"></p>
         <a href="home.html">Back to Home</a>
@@ -125,6 +126,7 @@
         const fileInput = document.getElementById('file');
         const preview = document.getElementById('preview');
         const predictButton = document.getElementById('predict');
+        const detectButton = document.getElementById('detect');
         const result = document.getElementById('result');
 
         fileInput.addEventListener('change', () => {
@@ -132,39 +134,65 @@
             result.textContent = '';
             if (!file) return;
             preview.src = URL.createObjectURL(file);
+            preview.style.width = '';
+            preview.style.height = '';
             preview.hidden = false;
             predictButton.disabled = false;
+            detectButton.disabled = false;
         });
 
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
+        // Send the chosen image to the server; returns the answer, or null if something went wrong
+        async function send(endpoint, working) {
             if (fileInput.files[0].size > MAX_UPLOAD_MB * 1024 * 1024) {
                 result.textContent = `That image is too large (the limit is ${MAX_UPLOAD_MB} MB)`;
-                return;
+                return null;
             }
-            predictButton.disabled = true;
-            result.textContent = 'Predicting...';
+            predictButton.disabled = detectButton.disabled = true;
+            result.textContent = working;
 
             let response;
             try {
-                response = await fetch('/predict', { method: 'POST', body: new FormData(form) });
+                response = await fetch(endpoint, { method: 'POST', body: new FormData(form) });
             } catch (error) {
                 result.textContent = 'Could not reach the prediction server. Is Traffic_app.py running?';
-                predictButton.disabled = false;
-                return;
+                return null;
+            } finally {
+                predictButton.disabled = detectButton.disabled = false;
             }
 
             const data = await response.json().catch(() => null);
-            if (response.ok && data) {
-                const percent = Math.round(data.confidence * 100);
-                result.textContent = data.recognised
-                    ? `Predicted Traffic 🚦 Sign is: ${data.sign} (${percent}% confidence)`
-                    : `No traffic sign recognised (best guess: ${data.sign}, ${percent}% confidence). Try a close-up of a single sign.`;
+            if (response.ok && data) return data;
+            result.textContent = data?.error
+                || `The prediction server hit an error (${response.status}). Check the terminal running Traffic_app.py.`;
+            return null;
+        }
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const data = await send('/predict', 'Predicting...');
+            if (!data) return;
+            const percent = Math.round(data.confidence * 100);
+            result.textContent = data.recognised
+                ? `Predicted Traffic 🚦 Sign is: ${data.sign} (${percent}% confidence)`
+                : `No traffic sign recognised (best guess: ${data.sign}, ${percent}% confidence). Try a close-up of a single sign.`;
+        });
+
+        detectButton.addEventListener('click', async () => {
+            const data = await send('/detect', 'Looking for signs...');
+            if (!data) return;
+            preview.src = data.image;
+            preview.style.width = '100%';
+            preview.style.height = 'auto';
+            const named = data.signs.filter(sign => sign.recognised);
+            const missed = data.signs.length - named.length;
+            if (!data.signs.length) {
+                result.textContent = 'No traffic signs found in this photo.';
             } else {
-                result.textContent = data?.error
-                    || `The prediction server hit an error (${response.status}). Check the terminal running Traffic_app.py.`;
+                result.textContent = `${data.signs.length} sign(s) found: `
+                    + (named.length ? named.map(s => `${s.sign} (${Math.round(s.confidence * 100)}%)`).join(', ')
+                                    : 'none could be named confidently')
+                    + (named.length && missed ? `, and ${missed} not recognised` : '');
             }
-            predictButton.disabled = false;
         });
     </script>
 

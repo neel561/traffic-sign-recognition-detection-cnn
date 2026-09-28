@@ -84,6 +84,17 @@ def load_model(path=MODEL_PATH):
 
 def predict(model, image):
     """Return (class_id, sign_name, confidence) for a single image."""
-    probabilities = model.predict(np.expand_dims(preprocess(image), 0), verbose=0)[0]
-    class_id = int(np.argmax(probabilities))
-    return class_id, CLASSES[class_id], float(probabilities[class_id])
+    return predict_many(model, [image])[0]
+
+
+def predict_many(model, images):
+    """The same as predict, but for several images in one go.
+
+    Calling the model once for the whole batch is far quicker than calling model.predict() for each
+    image, which matters when a photo holds several signs, and on video.
+    """
+    if not images:
+        return []
+    batch = np.array([preprocess(image) for image in images])
+    probabilities = np.asarray(model(batch, training=False))
+    return [(int(row.argmax()), CLASSES[int(row.argmax())], float(row.max())) for row in probabilities]

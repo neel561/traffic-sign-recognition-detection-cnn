@@ -1,0 +1,6 @@
+GTSDB test photos: 300, signs in them: 361
+Detector confidence threshold: 0.25
+Signs found (box overlap >= 0.5): 353/361 = 97.8%
+Signs missed:                            8
+Boxes that were not signs:               18 (0.06 per photo)
+Found and named correctly:               352/361 = 97.5% of all signs, 99.7% of the ones found
